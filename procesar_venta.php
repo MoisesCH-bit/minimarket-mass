@@ -140,3 +140,65 @@ if ($hora_actual >= 5 && $hora_actual <= 11) {
     $saludo = "Tienda cerrada";
 }
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mass - Comprobante</title>
+    <style>
+        body { font-family: monospace; background: #eaedd0; padding: 20px; }
+        .ticket { background: #fff; max-width: 400px; margin: 0 auto; padding: 15px; border: 2px dashed #333; }
+        .brand { text-align: center; font-size: 32px; font-weight: bold; color: #d61c1c; }
+        .text-right { text-align: right; }
+        .totales-box { font-weight: bold; border-top: 1px dashed #000; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="ticket">
+    <div class="brand">MASS</div>
+    <p style="text-align:center;">Tiendas Mass S.A.C.<br>Fecha: <?php echo date('d/m/Y H:i:s'); ?></p>
+    <hr>
+    <p><strong>¡<?php echo $saludo; ?>!</strong></p>
+    <p><strong>Cliente:</strong> <?php echo $cliente_nombre; ?><br>
+       <strong>DNI:</strong> <?php echo $cliente_dni; ?><br>
+       <strong>Tipo:</strong> <?php echo strtoupper($cliente_tipo); ?></p>
+    <hr>
+    
+    <table style="width:100%; font-size:12px;">
+        <thead>
+            <tr>
+                <th>Desc.</th>
+                <th class="text-right">Sub.</th>
+                <th class="text-right">IGV</th>
+                <th class="text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($productos_procesados as $p): ?>
+            <tr>
+                <td><?php echo $p['cantidad'] . "x " . $p['nombre']; ?></td>
+                <td class="text-right">S/ <?php echo number_format($p['subtotal'], 2); ?></td>
+                <td class="text-right">S/ <?php echo number_format($p['igv'], 2); ?></td>
+                <td class="text-right">S/ <?php echo number_format($p['total'], 2); ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <table class="totales-box" style="width:100%;">
+        <tr><td>Subtotal General:</td><td class="text-right">S/ <?php echo number_format($subtotal_tienda, 2); ?></td></tr>
+        <tr><td>IGV Acumulado:</td><td class="text-right">S/ <?php echo number_format($total_igv_tienda, 2); ?></td></tr>
+        <tr style="color:green;"><td>Desc. Monto (<?php echo ($porcentaje_desc_monto*100); ?>%):</td><td class="text-right">- S/ <?php echo number_format($descuento_monto, 2); ?></td></tr>
+        <tr style="color:green;"><td>Desc. Cliente (<?php echo ($porcentaje_desc_cliente*100); ?>%):</td><td class="text-right">- S/ <?php echo number_format($descuento_cliente, 2); ?></td></tr>
+        <tr style="font-size:16px;"><td><strong>TOTAL A PAGAR:</strong></td><td class="text-right"><strong>S/ <?php echo number_format($total_a_pagar, 2); ?></strong></td></tr>
+    </table>
+
+    <div style="background:#f0f0f0; padding:10px; margin-top:15px; text-align:center;">
+        <strong><?php echo $instruccion_pago; ?></strong>
+        <?php if($advertencia_pago): ?><br><span style="color:red; font-size:11px;"><?php echo $advertencia_pago; ?></span><?php endif; ?>
+    </div>
+</div>
+
+</body>
+</html>
