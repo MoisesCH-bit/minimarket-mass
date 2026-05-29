@@ -28,3 +28,45 @@ if (strlen($cliente_dni) !== 8 || !ctype_digit($cliente_dni)) {
     echo "</div>";
     exit; // Detiene el sistema de inmediato si falla
 }
+// --- 3. REGLAS 2 Y 3: PROCESAMIENTO DE PRODUCTOS (IGV Y SUBTOTALES) ---
+$productos_procesados = [];
+
+foreach ($productos as $prod) {
+    // Regla 2: Asignación de IGV por categoría
+    switch ($prod['categoria']) {
+        case 'abarrotes':
+        case 'bebidas':
+        case 'lácteos':
+        case 'limpieza':
+        case 'aseo personal':
+            $tasa_igv = 0.18;
+            break;
+        case 'panadería':
+        case 'frutas y verduras':
+            $tasa_igv = 0.00; // Inafecto
+            break;
+        default:
+            $tasa_igv = 0.18;
+            break;
+    }
+
+    // Regla 3: Cálculos individuales
+    $subtotal_p   = $prod['precio'] * $prod['cantidad'];
+    $igv_p        = $subtotal_p * $tasa_igv;
+    $total_p      = $subtotal_p + $igv_p;
+
+    // Acumular en las variables globales de la tienda
+    $subtotal_tienda  += $subtotal_p;
+    $total_igv_tienda += $igv_p;
+    $total_bruto      += $total_p;
+
+    // Guardar para el diseño de la boleta posterior
+    $productos_procesados[] = [
+        "nombre"   => $prod['nombre'],
+        "precio"   => $prod['precio'],
+        "cantidad" => $prod['cantidad'],
+        "subtotal" => $subtotal_p,
+        "igv"      => $igv_p,
+        "total"    => $total_p
+    ];
+}
