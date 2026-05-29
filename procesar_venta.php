@@ -70,3 +70,73 @@ foreach ($productos as $prod) {
         "total"    => $total_p
     ];
 }
+// --- 4. REGLA 4: DESCUENTO POR MONTO TOTAL ---
+$porcentaje_desc_monto = 0;
+
+if ($total_bruto < 30) {
+    $porcentaje_desc_monto = 0.00;
+} elseif ($total_bruto >= 30 && $total_bruto < 100) {
+    $porcentaje_desc_monto = 0.05;
+} elseif ($total_bruto >= 100 && $total_bruto < 200) {
+    $porcentaje_desc_monto = 0.10;
+} else {
+    $porcentaje_desc_monto = 0.15;
+}
+$descuento_monto = $total_bruto * $porcentaje_desc_monto;
+
+
+// --- 5. REGLA 5: DESCUENTO ADICIONAL POR TIPO DE CLIENTE ---
+$porcentaje_desc_cliente = 0;
+
+if ($cliente_tipo === 'frecuente') {
+    $porcentaje_desc_cliente = 0.02;
+} elseif ($cliente_tipo === 'vip') {
+    $porcentaje_desc_cliente = 0.05;
+} else {
+    $porcentaje_desc_cliente = 0.00;
+}
+$descuento_cliente = $total_bruto * $porcentaje_desc_cliente;
+
+// Totales definitivos
+$total_descuentos = $descuento_monto + $descuento_cliente;
+$total_a_pagar    = $total_bruto - $total_descuentos;
+// --- 6. REGLA 6: VALIDACIÓN DE MÉTODO DE PAGO ---
+$instruccion_pago = "";
+$advertencia_pago = "";
+
+switch ($metodo_pago) {
+    case 'efectivo':
+        $instruccion_pago = "Pago en efectivo - exacto preferido";
+        break;
+    case 'yape':
+    case 'plin':
+        $instruccion_pago = "Mostrar QR del comercio";
+        break;
+    case 'tarjeta':
+        $instruccion_pago = "Insertar tarjeta en POS";
+        break;
+    default:
+        $instruccion_pago = "Método de pago desconocido";
+        break;
+}
+
+if ($total_a_pagar > 500 && $metodo_pago === 'efectivo') {
+    $advertencia_pago = "Se sugiere otro método para montos altos";
+}
+
+
+// --- 7. REGLA 7: SALUDO SEGÚN HORA ACTUAL ---
+date_default_timezone_set('America/Lima'); // Zona horaria de Perú
+$hora_actual = (int)date('H');
+$saludo = "";
+
+if ($hora_actual >= 5 && $hora_actual <= 11) {
+    $saludo = "Buenos días";
+} elseif ($hora_actual >= 12 && $hora_actual <= 18) {
+    $saludo = "Buenas tardes";
+} elseif ($hora_actual >= 19 && $hora_actual <= 23) {
+    $saludo = "Buenas noches";
+} else {
+    $saludo = "Tienda cerrada";
+}
+?>
