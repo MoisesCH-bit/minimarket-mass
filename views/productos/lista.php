@@ -1,7 +1,13 @@
 <?php require __DIR__ . '/../layout/header.php'; ?>
+<?php require __DIR__ . '/../auth/barra_usuario.php'; ?>
 
 <h1>Catálogo del Minimarket Mass</h1>
 <p>Total de productos: <strong><?= count($productos) ?></strong></p>
+
+<a href="index.php?accion=nuevo-producto" 
+   style="display:inline-block;margin-bottom:16px;padding:10px 18px;background:#0066B3;color:#fff;border-radius:8px;text-decoration:none;font-weight:700">
+   + Nuevo producto
+</a>
 
 <table>
     <thead>
