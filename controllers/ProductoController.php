@@ -2,17 +2,6 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../models/ProductoRepository.php';
 
-/**
- * Controlador para todo lo relacionado con productos del Mass.
- *
- * Su trabajo es:
- *   1. Recibir peticiones (a través del router).
- *   2. Pedir los datos al Model (Repository).
- *   3. Pasar esos datos a la View para que se muestren.
- *
- * NO hace lógica de negocio (eso vive en las clases del Model).
- * NO genera HTML directamente (eso vive en las Views).
- */
 class ProductoController {
 
     private ProductoRepository $repo;
@@ -21,25 +10,15 @@ class ProductoController {
         $this->repo = new ProductoRepository();
     }
 
-    /**
-     * Acción: mostrar la lista de todos los productos.
-     * URL que la invoca: ?ruta=productos
-     */
     public function listar(): void {
-        // 1. Pedir datos al Model
         $productos = $this->repo->obtenerTodos();
-
-        // 2. Pasar los datos a la View
-        //    La variable $productos queda disponible dentro del archivo incluido.
         require __DIR__ . '/../views/productos/lista.php';
     }
 
-    // Muestra el formulario
     public function nuevo(): void {
         require __DIR__ . '/../views/productos/crear.php';
     }
 
-    // Procesa el formulario (POST)
     public function guardar(): void {
         $codigo    = trim($_POST['codigo'] ?? '');
         $nombre    = trim($_POST['nombre'] ?? '');
@@ -48,7 +27,6 @@ class ProductoController {
         $precio    = (float)($_POST['precio'] ?? 0);
         $stock     = (int)  ($_POST['stock'] ?? 0);
 
-        // Validación
         if ($codigo === '' || $nombre === '' || $precio <= 0) {
             $error = 'Completa código, nombre y un precio mayor a 0.';
             require __DIR__ . '/../views/productos/crear.php';
@@ -60,7 +38,57 @@ class ProductoController {
             'categoria' => $categoria, 'precio' => $precio, 'stock' => $stock,
         ]);
 
-        header('Location: index.php?accion=catalogo');  // Post-Redirect-Get
+        header('Location: index.php?accion=catalogo');
         exit;
     }
+
+    public function editar(): void
+    {
+        $codigo = trim($_GET['codigo'] ?? '');
+        $producto = $this->repo->buscarPorCodigo($codigo);
+
+        if ($producto === null) {
+            header('Location: index.php?accion=catalogo');
+            exit;
+        }
+
+        require __DIR__ . '/../views/productos/editar.php';
+    }
+
+    public function actualizar(): void
+    {
+        $codigo = trim($_POST['codigo'] ?? '');
+        $nombre = trim($_POST['nombre'] ?? '');
+        $precio = (float)($_POST['precio'] ?? 0);
+        $stock  = (int)($_POST['stock'] ?? 0);
+
+        if ($nombre === '' || $precio <= 0) {
+            $error = 'Nombre y precio son obligatorios.';
+            $producto = $this->repo->buscarPorCodigo($codigo);
+            require __DIR__ . '/../views/productos/editar.php';
+            return;
+        }
+
+        $this->repo->actualizar($codigo, [
+            'nombre' => $nombre,
+            'precio' => $precio,
+            'stock'  => $stock,
+        ]);
+
+        header('Location: index.php?accion=catalogo');
+        exit;
+    }
+    // Agrega este método a la clase ProductoController
+public function eliminar(): void {
+    $codigo = $_GET['codigo'] ?? '';
+    
+    if ($codigo !== '') {
+        $this->repo->eliminar($codigo);
+    }
+    
+    // Redirigir al catálogo después de eliminar
+    header('Location: index.php?accion=catalogo');
+    exit;
+}
+
 }

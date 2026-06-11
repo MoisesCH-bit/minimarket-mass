@@ -254,4 +254,16 @@ class ProductoRepository {
         return false;
     }
 }
+// Agrega este método al final de la clase ProductoRepository
+public function eliminar(string $codigo): bool {
+    try {
+        $pdo = getConexion();
+        $stmt = $pdo->prepare("DELETE FROM productos WHERE codigo_barras = :codigo");
+        return $stmt->execute([':codigo' => $codigo]);
+    } catch (PDOException $e) {
+        error_log('[ProductoRepository::eliminar] ' . $e->getMessage());
+        return false;
+    }
+}
+
 }

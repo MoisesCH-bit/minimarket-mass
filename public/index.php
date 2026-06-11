@@ -44,14 +44,34 @@ switch ($accion) {
         (new ProductoController())->nuevo();
         break;
 
-    case 'guardar-producto':
-        requiereLogin();
-        (new ProductoController())->guardar();
-        break;
+case 'guardar-producto':
+    requiereLogin();
+    (new ProductoController())->guardar();
+    break;
 
-    case 'catalogo':
-    default:
-        requiereLogin();                      // sin sesión → manda al login
-        (new ProductoController())->listar(); // ← llama al método REAL del controller
-        break;
+case 'editar-producto':
+    requiereLogin();
+    (new ProductoController())->editar();
+    break;
+
+case 'actualizar-producto':
+    requiereLogin();
+    (new ProductoController())->actualizar();
+    break;
+
+case 'catalogo':
+default:
+    requiereLogin();
+    (new ProductoController())->listar();
+    break;
+
+case 'actualizar-producto':
+    $controller->actualizar();
+    break;
+    // Busca el switch($accion) y agrega el nuevo caso:
+case 'eliminar-producto':
+    requiereLogin();
+    (new ProductoController())->eliminar();
+    break;
+
 }
