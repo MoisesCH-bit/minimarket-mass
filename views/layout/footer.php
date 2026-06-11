@@ -1,6 +1,5 @@
-<hr>
-    <p style="color:#999; font-size:12px;">
-        Minimarket Mass — Sistema desarrollado en clase SENATI 2026
-    </p>
+<footer class="footer">
+    Minimarket Mass · Mass Cayma · SENATI 2026
+</footer>
 </body>
 </html>

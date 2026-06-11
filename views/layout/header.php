@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Minimarket Mass</title>
+    <link rel="stylesheet" href="../views/layout/styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+            margin: 0;
             background: #f5f5f5;
         }
         h1 {
@@ -30,16 +31,9 @@
             padding: 10px 12px;
             border-bottom: 1px solid #eee;
         }
-        tr:hover {
-            background: #f9f9f9;
-        }
-        .precio {
-            font-weight: bold;
-            color: #0066B3;
-        }
-        .sin-stock {
-            color: #c33;
-        }
+        tr:hover { background: #f9f9f9; }
+        .precio { font-weight: bold; color: #0066B3; }
+        .sin-stock { color: #c33; }
     </style>
 </head>
 <body>

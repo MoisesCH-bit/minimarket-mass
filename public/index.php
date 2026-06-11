@@ -38,6 +38,16 @@ switch ($accion) {
               <a href='index.php?accion=catalogo'>← Volver al catálogo</a>
               </body></html>";
         break;
+    
+    case 'nuevo-producto':
+        requiereLogin();
+        (new ProductoController())->nuevo();
+        break;
+
+    case 'guardar-producto':
+        requiereLogin();
+        (new ProductoController())->guardar();
+        break;
 
     case 'catalogo':
     default:
