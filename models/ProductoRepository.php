@@ -3,31 +3,15 @@ declare(strict_types=1);
 require_once __DIR__ . '/Producto.php';
 require_once __DIR__ . '/../config/conexion.php';
 
-/**
- * Repositorio de productos del Minimarket Mass.
- *
- * SESIÓN 4: usaba un array hardcoded.
- * SESIÓN 5: ahora lee de MySQL con PDO.
- *
- * El cambio es INTERNO: los métodos siguen devolviendo lo mismo
- * (array de Producto o ?Producto). Por eso el Controller y la View
- * NO se tocan. Ese es el payoff del MVC.
- */
 class ProductoRepository {
 
-    /**
-     * Devuelve TODOS los productos del catálogo desde la BD.
-     * @return Producto[]
-     */
     public function obtenerTodos(): array {
         try {
-            $pdo = getConexion();
-
-            // codigo_barras AS codigo → la columna real es codigo_barras,
-            // pero la clase Producto espera "codigo". El alias los empata.
+            $pdo  = getConexion();
             $stmt = $pdo->query(
                 "SELECT codigo_barras AS codigo, nombre, precio, stock
                  FROM productos
+                 WHERE activo = 1
                  ORDER BY nombre"
             );
 
@@ -36,8 +20,8 @@ class ProductoRepository {
                 $productos[] = new Producto(
                     $f['codigo'],
                     $f['nombre'],
-                    (float) $f['precio'],   // MySQL devuelve TODO como string
-                    (int)   $f['stock']     // por eso casteamos a float/int
+                    (float) $f['precio'],
+                    (int)   $f['stock']
                 );
             }
             return $productos;
@@ -48,14 +32,9 @@ class ProductoRepository {
         }
     }
 
-    /**
-     * Busca UN producto por su código.
-     * Usa PREPARED STATEMENT → seguro contra SQL injection.
-     */
     public function buscarPorCodigo(string $codigo): ?Producto {
         try {
-            $pdo = getConexion();
-
+            $pdo  = getConexion();
             $stmt = $pdo->prepare(
                 "SELECT codigo_barras AS codigo, nombre, precio, stock
                  FROM productos
@@ -64,9 +43,7 @@ class ProductoRepository {
             $stmt->execute([':codigo' => $codigo]);
 
             $fila = $stmt->fetch();
-            if ($fila === false) {
-                return null;
-            }
+            if ($fila === false) return null;
 
             return new Producto(
                 $fila['codigo'],
@@ -81,15 +58,9 @@ class ProductoRepository {
         }
     }
 
-    /**
-     * Busca productos cuyo nombre contenga el término indicado.
-     * Usa LIKE con prepared statement — el % se arma en PHP, no en el SQL.
-     * @return Producto[]
-     */
     public function buscarPorNombre(string $termino): array {
         try {
-            $pdo = getConexion();
-
+            $pdo  = getConexion();
             $stmt = $pdo->prepare(
                 "SELECT codigo_barras AS codigo, nombre, precio, stock
                  FROM productos
@@ -115,15 +86,9 @@ class ProductoRepository {
         }
     }
 
-    /**
-     * Devuelve los productos de una categoría específica.
-     * Filtra por categoria_id con prepared statement.
-     * @return Producto[]
-     */
     public function obtenerPorCategoria(int $categoriaId): array {
         try {
-            $pdo = getConexion();
-
+            $pdo  = getConexion();
             $stmt = $pdo->prepare(
                 "SELECT codigo_barras AS codigo, nombre, precio, stock
                  FROM productos
@@ -149,15 +114,9 @@ class ProductoRepository {
         }
     }
 
-    /**
-     * Devuelve los productos con stock menor al umbral indicado,
-     * ordenados de menor a mayor stock (los más urgentes primero).
-     * @return Producto[]
-     */
     public function obtenerBajoStock(int $umbral): array {
         try {
-            $pdo = getConexion();
-
+            $pdo  = getConexion();
             $stmt = $pdo->prepare(
                 "SELECT codigo_barras AS codigo, nombre, precio, stock
                  FROM productos
@@ -183,13 +142,9 @@ class ProductoRepository {
         }
     }
 
-    /**
-     * Devuelve el total de productos en la tabla.
-     * Usa COUNT(*) y fetchColumn() → devuelve un int, no un array.
-     */
     public function contarTotalProductos(): int {
         try {
-            $pdo = getConexion();
+            $pdo  = getConexion();
             $stmt = $pdo->query("SELECT COUNT(*) FROM productos");
             return (int) $stmt->fetchColumn();
 
@@ -199,16 +154,9 @@ class ProductoRepository {
         }
     }
 
-    /**
-     * BONUS: Devuelve los productos más caros del catálogo.
-     * Útil para mostrar los productos premium o revisar precios altos.
-     * Usa LIMIT con bindValue y PDO::PARAM_INT (LIMIT no acepta strings).
-     * @return Producto[]
-     */
     public function obtenerMasCaros(int $limite): array {
         try {
-            $pdo = getConexion();
-
+            $pdo  = getConexion();
             $stmt = $pdo->prepare(
                 "SELECT codigo_barras AS codigo, nombre, precio, stock
                  FROM productos
@@ -234,36 +182,57 @@ class ProductoRepository {
             return [];
         }
     }
-    public function crear(array $d): bool {
-    try {
-        $pdo  = getConexion();
-        $stmt = $pdo->prepare(
-            "INSERT INTO productos (codigo_barras, nombre, marca, categoria_id, precio, stock)
-             VALUES (:codigo, :nombre, :marca, :categoria, :precio, :stock)"
-        );
-        return $stmt->execute([
-            ':codigo'    => $d['codigo'],
-            ':nombre'    => $d['nombre'],
-            ':marca'     => $d['marca'],
-            ':categoria' => $d['categoria'],
-            ':precio'    => $d['precio'],
-            ':stock'     => $d['stock'],
-        ]);
-    } catch (PDOException $e) {
-        error_log('[ProductoRepository::crear] ' . $e->getMessage());
-        return false;
-    }
-}
-// Agrega este método al final de la clase ProductoRepository
-public function eliminar(string $codigo): bool {
-    try {
-        $pdo = getConexion();
-        $stmt = $pdo->prepare("DELETE FROM productos WHERE codigo_barras = :codigo");
-        return $stmt->execute([':codigo' => $codigo]);
-    } catch (PDOException $e) {
-        error_log('[ProductoRepository::eliminar] ' . $e->getMessage());
-        return false;
-    }
-}
 
+    public function crear(array $d): bool {
+        try {
+            $pdo  = getConexion();
+            $stmt = $pdo->prepare(
+                "INSERT INTO productos (codigo_barras, nombre, marca, categoria_id, precio, stock)
+                 VALUES (:codigo, :nombre, :marca, :categoria, :precio, :stock)"
+            );
+            return $stmt->execute([
+                ':codigo'    => $d['codigo'],
+                ':nombre'    => $d['nombre'],
+                ':marca'     => $d['marca'],
+                ':categoria' => $d['categoria'],
+                ':precio'    => $d['precio'],
+                ':stock'     => $d['stock'],
+            ]);
+        } catch (PDOException $e) {
+            error_log('[ProductoRepository::crear] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function actualizar(string $codigo, array $d): bool {
+        try {
+            $pdo  = getConexion();
+            $stmt = $pdo->prepare(
+                "UPDATE productos SET nombre = :nombre, precio = :precio, stock = :stock
+                 WHERE codigo_barras = :codigo"
+            );
+            return $stmt->execute([
+                ':nombre' => $d['nombre'],
+                ':precio' => $d['precio'],
+                ':stock'  => $d['stock'],
+                ':codigo' => $codigo,
+            ]);
+        } catch (PDOException $e) {
+            error_log('[ProductoRepository::actualizar] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function eliminar(string $codigo): bool {
+        try {
+            $pdo  = getConexion();
+            $stmt = $pdo->prepare(
+                "UPDATE productos SET activo = 0 WHERE codigo_barras = :codigo"
+            );
+            return $stmt->execute([':codigo' => $codigo]);
+        } catch (PDOException $e) {
+            error_log('[ProductoRepository::eliminar] ' . $e->getMessage());
+            return false;
+        }
+    }
 }

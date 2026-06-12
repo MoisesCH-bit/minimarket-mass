@@ -42,9 +42,8 @@ class ProductoController {
         exit;
     }
 
-    public function editar(): void
-    {
-        $codigo = trim($_GET['codigo'] ?? '');
+    public function editar(): void {
+        $codigo   = trim($_GET['codigo'] ?? '');
         $producto = $this->repo->buscarPorCodigo($codigo);
 
         if ($producto === null) {
@@ -55,15 +54,14 @@ class ProductoController {
         require __DIR__ . '/../views/productos/editar.php';
     }
 
-    public function actualizar(): void
-    {
+    public function actualizar(): void {
         $codigo = trim($_POST['codigo'] ?? '');
         $nombre = trim($_POST['nombre'] ?? '');
         $precio = (float)($_POST['precio'] ?? 0);
-        $stock  = (int)($_POST['stock'] ?? 0);
+        $stock  = (int)  ($_POST['stock'] ?? 0);
 
         if ($nombre === '' || $precio <= 0) {
-            $error = 'Nombre y precio son obligatorios.';
+            $error    = 'Nombre y precio son obligatorios.';
             $producto = $this->repo->buscarPorCodigo($codigo);
             require __DIR__ . '/../views/productos/editar.php';
             return;
@@ -78,17 +76,15 @@ class ProductoController {
         header('Location: index.php?accion=catalogo');
         exit;
     }
-    // Agrega este método a la clase ProductoController
-public function eliminar(): void {
-    $codigo = $_GET['codigo'] ?? '';
-    
-    if ($codigo !== '') {
-        $this->repo->eliminar($codigo);
-    }
-    
-    // Redirigir al catálogo después de eliminar
-    header('Location: index.php?accion=catalogo');
-    exit;
-}
 
+    public function eliminar(): void {
+        $codigo = trim($_GET['codigo'] ?? '');
+
+        if ($codigo !== '') {
+            $this->repo->eliminar($codigo);
+        }
+
+        header('Location: index.php?accion=catalogo');
+        exit;
+    }
 }
