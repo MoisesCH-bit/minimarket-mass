@@ -10,10 +10,17 @@ class ProductoController {
         $this->repo = new ProductoRepository();
     }
 
-    public function listar(): void {
-        $productos = $this->repo->obtenerTodos();
-        require __DIR__ . '/../views/productos/lista.php';
-    }
+public function listar(): void {
+    $porPagina   = 10;
+    $paginaActual = max(1, (int)($_GET['pagina'] ?? 1));
+    $offset       = ($paginaActual - 1) * $porPagina;
+
+    $total        = $this->repo->contarActivos();
+    $totalPaginas = (int) ceil($total / $porPagina);
+    $productos    = $this->repo->obtenerPagina($porPagina, $offset);
+
+    require __DIR__ . '/../views/productos/lista.php';
+}
 
     public function nuevo(): void {
         require __DIR__ . '/../views/productos/crear.php';

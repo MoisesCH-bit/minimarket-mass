@@ -3,37 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <title>Minimarket Mass</title>
-    <link rel="stylesheet" href="../views/layout/styles.css">
     <style>
+        /* ===== RESET BASE ===== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: #0066B3;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .navbar-brand { font-weight: 800; font-size: 16px; letter-spacing: .5px; }
+        .navbar-user  { display: flex; align-items: center; gap: 14px; font-size: 14px; }
+        .btn-salir {
+            background: #FFB81C;
+            color: #0a2540;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 5px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+        .btn-salir:hover { background: #e6a800; }
+
+        /* ===== LAYOUT ===== */
+        .contenedor {
+            display: flex;
+            min-height: calc(100vh - 90px);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            background: #0c1f33;
+            width: 190px;
+            flex: 0 0 190px;
+            padding: 16px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .sidebar-item {
+            display: block;
+            color: #cdd9e6;
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .sidebar-item:hover { background: #11304d; color: #fff; }
+        .sidebar-item.activo { background: #0066B3; color: #fff; font-weight: 700; }
+
+        /* ===== CONTENIDO ===== */
+        main {
+            flex: 1;
+            padding: 24px;
+            background: #f4f6f9;
         }
         h1 {
             color: #0066B3;
             border-bottom: 3px solid #FFB81C;
             padding-bottom: 10px;
+            margin-bottom: 16px;
         }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #0c1422;
+            color: #9fb0c6;
+            text-align: center;
+            padding: 14px;
+            font-size: 13px;
+        }
+
+        /* ===== TABLA ===== */
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
         }
-        th {
+        thead tr { background: #0066B3; color: #fff; }
+        th { padding: 12px 14px; text-align: left; font-size: 13px; }
+        td { padding: 11px 14px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+        .precio    { font-weight: 700; color: #0066B3; }
+        .sin-stock { color: #c33; font-weight: 600; }
+
+        /* ===== PAGINACIÓN ===== */
+        .paginacion {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 28px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .pag-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #d7dde6;
+            background: #fff;
+            color: #0066B3;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all .2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .pag-btn:hover { background: #0066B3; color: #fff; border-color: #0066B3; }
+        .pag-activo {
             background: #0066B3;
-            color: white;
-            padding: 12px;
-            text-align: left;
+            color: #fff;
+            border-color: #0066B3;
+            box-shadow: 0 2px 8px rgba(0,102,179,0.3);
         }
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #eee;
+        .pag-activo:hover { background: #004f8c; }
+
+        /* ===== BOTONES GENERALES ===== */
+        .btn-primario {
+            background: #0066B3;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
         }
-        tr:hover { background: #f9f9f9; }
-        .precio { font-weight: bold; color: #0066B3; }
-        .sin-stock { color: #c33; }
+        .btn-primario:hover { background: #004f8c; }
+        .btn-guardar {
+            width: 100%;
+            margin-top: 20px;
+            padding: 11px;
+            border: none;
+            border-radius: 8px;
+            background: #0066B3;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .btn-guardar:hover { background: #004f8c; }
+
+        /* ===== DRAWER: Nuevo producto ===== */
+        #drawer-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 100;
+        }
+        #drawer-overlay.activo { display: block; }
+        #drawer-nuevo {
+            position: fixed;
+            top: 0; right: 0;
+            width: 380px;
+            height: 100%;
+            background: #fff;
+            z-index: 101;
+            box-shadow: -6px 0 30px rgba(0,0,0,0.15);
+            transform: translateX(100%);
+            transition: transform .3s ease;
+            overflow-y: auto;
+            padding: 32px 28px;
+        }
+        #drawer-nuevo.activo { transform: translateX(0); }
+        #drawer-nuevo h2 {
+            color: #0066B3;
+            font-size: 20px;
+            margin: 0 0 20px;
+            border-bottom: 3px solid #FFB81C;
+            padding-bottom: 10px;
+        }
+        #drawer-nuevo label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 12px 0 4px;
+            color: #1e293b;
+        }
+        #drawer-nuevo input,
+        #drawer-nuevo select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #d7dde6;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        #drawer-nuevo input:focus,
+        #drawer-nuevo select:focus {
+            outline: none;
+            border-color: #0066B3;
+            box-shadow: 0 0 0 3px rgba(0,102,179,0.1);
+        }
+        .btn-cerrar-drawer {
+            position: absolute;
+            top: 16px; right: 20px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #64748b;
+        }
+        .error-drawer {
+            background: #fef2f2;
+            border: 1px solid #f3c2c2;
+            color: #b91c1c;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        /* ===== MODAL: Confirmar eliminar ===== */
+        #modal-eliminar {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        #modal-eliminar.activo { display: flex; }
+        .modal-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 36px 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .modal-card .icono { font-size: 48px; margin-bottom: 12px; }
+        .modal-card h2    { margin: 0 0 8px; color: #1e293b; font-size: 18px; border: none; }
+        .modal-card p     { color: #64748b; margin-bottom: 6px; font-size: 14px; }
+        .modal-card .nota { font-size: 12px; color: #94a3b8; margin-bottom: 24px; }
+        .modal-btns { display: flex; gap: 12px; justify-content: center; }
+        .btn-cancelar {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-cancelar:hover { background: #f8fafc; }
+        .btn-confirmar {
+            padding: 10px 24px;
+            border-radius: 8px;
+            background: #ef4444;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-confirmar:hover { background: #dc2626; }
     </style>
 </head>
 <body>

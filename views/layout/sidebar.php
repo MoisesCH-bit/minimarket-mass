@@ -8,8 +8,8 @@
        class="sidebar-item <?= $accionActual === 'nuevo-producto' ? 'activo' : '' ?>">
         ➕ Nuevo producto
     </a>
-    <a href="index.php?accion=reportes"
-       class="sidebar-item <?= $accionActual === 'reportes' ? 'activo' : '' ?>">
+    <a href="index.php?accion=reporte-pdf"
+       target="_blank">
         📊 Reportes
     </a>
 </aside>

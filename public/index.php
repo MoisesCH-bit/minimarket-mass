@@ -7,6 +7,7 @@ session_start();
 require_once __DIR__ . '/../helpers/sesion.php';
 require_once __DIR__ . '/../controllers/AuthController.php';
 require_once __DIR__ . '/../controllers/ProductoController.php';
+require_once __DIR__ . '/../controllers/ReporteController.php';
 
 // Enrutamiento simple por ?accion=
 $accion = $_GET['accion'] ?? 'catalogo';
@@ -26,52 +27,36 @@ switch ($accion) {
         $auth->logout();
         break;
 
-    case 'panel-admin':
-        requiereRol('admin');
-        $u = usuarioActual();
-        echo "<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'>
-              <title>Panel de administración</title>
-              <style>body{font-family:sans-serif;padding:2rem;}
-              h1{color:#0066B3;}</style></head><body>
-              <h1>Panel de administración</h1>
-              <p>Bienvenido, <strong>" . htmlspecialchars($u['nombre']) . "</strong>.</p>
-              <a href='index.php?accion=catalogo'>← Volver al catálogo</a>
-              </body></html>";
-        break;
-    
     case 'nuevo-producto':
         requiereLogin();
         (new ProductoController())->nuevo();
         break;
 
-case 'guardar-producto':
-    requiereLogin();
-    (new ProductoController())->guardar();
-    break;
+    case 'guardar-producto':
+        requiereLogin();
+        (new ProductoController())->guardar();
+        break;
 
-case 'editar-producto':
-    requiereLogin();
-    (new ProductoController())->editar();
-    break;
+    case 'editar-producto':
+        requiereLogin();
+        (new ProductoController())->editar();
+        break;
 
-case 'actualizar-producto':
-    requiereLogin();
-    (new ProductoController())->actualizar();
-    break;
-
-case 'catalogo':
-default:
-    requiereLogin();
-    (new ProductoController())->listar();
-    break;
-
-case 'actualizar-producto':
-    $controller->actualizar();
-    break;
-    // Busca el switch($accion) y agrega el nuevo caso:
-case 'eliminar-producto':
-    requiereLogin();
-    (new ProductoController())->eliminar();
-    break;
-
+    case 'actualizar-producto':
+        requiereLogin();
+        (new ProductoController())->actualizar();
+        break;
+    case 'reporte-pdf':
+        requiereLogin();
+        (new ReporteController())->catalogoPdf();
+        break;
+    case 'eliminar-producto':
+        requiereLogin();
+        (new ProductoController())->eliminar();
+        break;
+    case 'catalogo':
+    default:
+        requiereLogin();                      // sin sesión → manda al login
+        (new ProductoController())->listar(); // ← llama al método REAL del controller
+        break;
 }
