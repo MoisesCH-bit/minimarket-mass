@@ -1,12 +1,10 @@
 <?php require __DIR__ . '/../layout/header.php'; ?>
-<?php require __DIR__ . '/../layout/navbar.php'; ?>
 
 <div class="contenedor">
     <?php require __DIR__ . '/../layout/sidebar.php'; ?>
 
     <main class="contenido">
         <h1>Nuevo producto</h1>
-        <hr style="border:none;border-top:3px solid #FFB81C;margin-bottom:24px">
 
         <?php if (!empty($error)): ?>
             <div style="background:#fef2f2;border:1px solid #f3c2c2;color:#b91c1c;
