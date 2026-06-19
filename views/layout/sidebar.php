@@ -12,4 +12,12 @@
        target="_blank">
         📊 Reportes
     </a>
+    <a href="index.php?accion=nueva-venta"
+   class="sidebar-item <?= $accionActual === 'nueva-venta' ? 'activo' : '' ?>">
+    🛒 Nueva Venta
+</a>
+        <a href="index.php?accion=clientes"
+       class="sidebar-item <?= $accionActual === 'clientes' ? 'activo' : '' ?>">
+        👥 Clientes
+    </a>
 </aside>

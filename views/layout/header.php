@@ -30,26 +30,35 @@
 
     /* ===== LAYOUT ===== */
     .contenedor { display: flex; flex: 1; }
-
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-      width: 200px; background: #004F8C; padding: 20px 0;
-      display: flex; flex-direction: column; min-height: calc(100vh - 56px - 40px);
-    }
-    .sidebar a {
-      color: #cce0f5; text-decoration: none;
-      padding: 12px 20px; font-size: 14px; font-weight: 600;
-      display: block; border-left: 3px solid transparent;
-      transition: background .2s;
-    }
-    .sidebar a:hover { background: #003d70; color: #fff; }
-    .sidebar a.activo { background: #003d70; color: #FFB81C; border-left: 3px solid #FFB81C; }
-    .sidebar .separador { height: 1px; background: #003d70; margin: 8px 16px; }
-    .sidebar a.disabled { color: #6a9bbf; cursor: not-allowed; pointer-events: none; }
+    .contenido {
+    margin-left: 200px;
+}
+    
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 200px; background: #004F8C; padding: 20px 0;
+  display: flex; flex-direction: column;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  z-index: 100;
+}
+.sidebar a {
+  color: #cce0f5; text-decoration: none;
+  padding: 12px 20px; font-size: 14px; font-weight: 600;
+  display: block; border-left: 3px solid transparent;
+  transition: background .2s;
+}
+.sidebar a:hover { background: #003d70; color: #fff; }
+.sidebar a.activo { background: #003d70; color: #FFB81C; border-left: 3px solid #FFB81C; }
+.sidebar .separador { height: 1px; background: #003d70; margin: 8px 16px; }
+.sidebar a.disabled { color: #6a9bbf; cursor: not-allowed; pointer-events: none; }
 
     /* ===== MAIN ===== */
     main { flex: 1; padding: 28px 32px; }
-    main h1 { color: #0066B3; border-bottom: 3px solid #FFB81C; padding-bottom: 10px; margin-bottom: 18px; }
+    main h1 { color: #0066B3; border-bottom: 3px solid #FFB81C; padding-bottom: 3px; margin-bottom: 15px; }
 
     /* ===== TABLA ===== */
     table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 6px rgba(0,0,0,.08); border-radius: 8px; overflow: hidden; }
@@ -163,6 +172,26 @@
       border-color: #0066B3;
       box-shadow: 0 0 0 3px rgba(0,102,179,0.1);
     }
+
+    /* ===== SIN SCROLL GLOBAL ===== */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.contenedor {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 56px);
+    overflow: hidden;
+}
+
+main {
+    flex: 1;
+    padding: 28px 32px;
+    overflow-y: auto;
+    height: calc(100vh - 56px);
+}
   </style>
 </head>
 <body>
