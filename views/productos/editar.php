@@ -51,7 +51,7 @@
         Guardar Cambios
     </button>
     
-    <a href="index.php?accion=panel" 
+    <a href="index.php?accion=catalogo" 
        style="background: #64748b; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px; padding: 8px 18px; border-radius: 8px; display: inline-block;">
         Volver al Catalogo
     </a>

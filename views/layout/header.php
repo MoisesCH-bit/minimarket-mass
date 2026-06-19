@@ -1,4 +1,3 @@
-<?php $u = usuarioActual(); ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -157,27 +156,13 @@
       text-align: center; padding: 12px; font-size: 12px;
     }
     .footer strong { color: #FFB81C; }
+
+    /* ===== BUSCADOR ===== */
+    #buscador:focus {
+      outline: none;
+      border-color: #0066B3;
+      box-shadow: 0 0 0 3px rgba(0,102,179,0.1);
+    }
   </style>
 </head>
 <body>
-
-<nav class="navbar">
-  <div class="logo">🛒 <span>MASS</span> · Sistema de Caja</div>
-  <div class="usuario">
-    👤 <strong><?= htmlspecialchars($u['nombre']) ?></strong>
-    <span class="rol-badge"><?= htmlspecialchars(ucfirst($u['rol'])) ?></span>
-    <?php if (!empty($u['ultimo_acceso'])): ?>
-      <em style="font-size:13px;color:#fff;">
-        Último acceso: <?= htmlspecialchars(date('d/m/Y H:i', strtotime($u['ultimo_acceso']))) ?>
-      </em>
-    <?php endif; ?>
-    <a href="index.php?accion=logout" class="salir">Salir</a>
-  </div>
-</nav>
-
-<div class="contenedor">
-  <!-- Aquí va el sidebar y el main de cada vista -->
-</div>
-
-</body>
-</html>

@@ -276,4 +276,35 @@ public function obtenerPagina(int $limite, int $offset): array {
         return [];
     }
 }
+public function buscarPorNombreOCodigo(string $termino): array {
+    try {
+        $pdo  = getConexion();
+        $stmt = $pdo->prepare(
+            "SELECT codigo_barras AS codigo, nombre, precio, stock
+             FROM productos
+             WHERE activo = 1
+             AND (nombre LIKE :termino1 OR codigo_barras LIKE :termino2)
+             ORDER BY nombre"
+        );
+        $stmt->execute([
+            ':termino1' => '%' . $termino . '%',
+            ':termino2' => '%' . $termino . '%',
+        ]);
+
+        $productos = [];
+        foreach ($stmt->fetchAll() as $f) {
+            $productos[] = new Producto(
+                $f['codigo'],
+                $f['nombre'],
+                (float) $f['precio'],
+                (int)   $f['stock']
+            );
+        }
+        return $productos;
+
+    } catch (PDOException $e) {
+        error_log('[ProductoRepository::buscarPorNombreOCodigo] ' . $e->getMessage());
+        return [];
+    }
+}
 }

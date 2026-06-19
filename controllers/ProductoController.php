@@ -94,4 +94,25 @@ public function listar(): void {
         header('Location: index.php?accion=catalogo');
         exit;
     }
+    public function buscarAjax(): void {
+    $termino = trim($_GET['q'] ?? '');
+
+    if ($termino === '') {
+        $productos = [];
+    } else {
+        $productos = $this->repo->buscarPorNombreOCodigo($termino);
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode(array_map(function($p) {
+        return [
+            'codigo'      => $p->getCodigo(),
+            'nombre'      => $p->getNombre(),
+            'precio'      => $p->getPrecio(),
+            'precioConIgv'=> $p->precioConIGV(),
+            'stock'       => $p->getStock(),
+        ];
+    }, $productos));
+    exit;
+}
 }

@@ -59,4 +59,8 @@ switch ($accion) {
         requiereLogin();                      // sin sesión → manda al login
         (new ProductoController())->listar(); // ← llama al método REAL del controller
         break;
+    case 'buscar-producto-ajax':
+    requiereLogin();
+    (new ProductoController())->buscarAjax();
+    break;
 }
