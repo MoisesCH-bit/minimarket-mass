@@ -17,6 +17,7 @@ $auth   = new AuthController();
 
 switch ($accion) {
 
+    // ───────────── AUTH ─────────────
     case 'login':
         $auth->mostrarLogin();
         break;
@@ -29,6 +30,7 @@ switch ($accion) {
         $auth->logout();
         break;
 
+    // ───────────── PRODUCTOS ─────────────
     case 'nuevo-producto':
         requiereLogin();
         (new ProductoController())->nuevo();
@@ -48,76 +50,84 @@ switch ($accion) {
         requiereLogin();
         (new ProductoController())->actualizar();
         break;
-    case 'reporte-pdf':
-        requiereLogin();
-        (new ReporteController())->catalogoPdf();
-        break;
+
     case 'eliminar-producto':
         requiereLogin();
         (new ProductoController())->eliminar();
         break;
+
+    case 'buscar-producto-ajax':
+        requiereLogin();
+        (new ProductoController())->buscarAjax();
+        break;
+
+    // ───────────── CLIENTES ─────────────
     case 'clientes':
-    requiereLogin();
-    (new ClienteController())->listar();
-    break;
+        requiereLogin();
+        (new ClienteController())->listar();
+        break;
 
-case 'nuevo-cliente':
-    requiereLogin();
-    (new ClienteController())->nuevo();
-    break;
+    case 'nuevo-cliente':
+        requiereLogin();
+        (new ClienteController())->nuevo();
+        break;
 
-case 'guardar-cliente':
-    requiereLogin();
-    (new ClienteController())->guardar();
-    break;
+    case 'guardar-cliente':
+        requiereLogin();
+        (new ClienteController())->guardar();
+        break;
 
-case 'eliminar-cliente':
-    requiereLogin();
-    (new ClienteController())->eliminar();
-    break;
+    case 'editar-cliente':
+        requiereLogin();
+        (new ClienteController())->editar();
+        break;
 
-case 'editar-cliente':
-    requiereLogin();
-    (new ClienteController())->editar();
-    break;
+    case 'actualizar-cliente':
+        requiereLogin();
+        (new ClienteController())->actualizar();
+        break;
 
-case 'actualizar-cliente':
-    requiereLogin();
-    (new ClienteController())->actualizar();
-    break;
+    case 'eliminar-cliente':
+        requiereLogin();
+        (new ClienteController())->eliminar();
+        break;
 
-case 'nueva-venta':
-    requiereLogin();
-    (new VentaController())->nueva();
-    break;
+    // ───────────── VENTAS ─────────────
+    case 'nueva-venta':
+        requiereLogin();
+        (new VentaController())->nueva();
+        break;
 
-case 'buscar-producto-venta-ajax':
-    requiereLogin();
-    (new VentaController())->buscarProductoAjax();
-    break;
+    case 'buscar-producto-venta-ajax':
+        requiereLogin();
+        (new VentaController())->buscarProductoAjax();
+        break;
 
-case 'buscar-cliente-ajax':
-    requiereLogin();
-    (new VentaController())->buscarClienteAjax();
-    break;
+    case 'buscar-cliente-ajax':
+        requiereLogin();
+        (new VentaController())->buscarClienteAjax();
+        break;
 
-case 'guardar-venta':
-    requiereLogin();
-    (new VentaController())->guardar();
-    break;
+    case 'guardar-venta':
+        requiereLogin();
+        (new VentaController())->guardar();
+        break;
 
-case 'boleta-venta':
-    requiereLogin();
-    (new VentaController())->boleta();
-    break;
-    
+    case 'boleta-venta':
+        requiereLogin();
+        (new VentaController())->boleta();
+        break;
+
+    // ───────────── REPORTES ─────────────
+    case 'reporte-pdf':
+        requiereLogin();
+        (new ReporteController())->catalogoPdf();
+        break;
+
+    // ───────────── DEFAULT ─────────────
     case 'catalogo':
     default:
-        requiereLogin();                      // sin sesión → manda al login
-        (new ProductoController())->listar(); // ← llama al método REAL del controller
+        requiereLogin();
+        (new ProductoController())->listar();
         break;
-    case 'buscar-producto-ajax':
-    requiereLogin();
-    (new ProductoController())->buscarAjax();
-    break;
 }

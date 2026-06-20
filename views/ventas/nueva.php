@@ -147,36 +147,36 @@ document.getElementById('input-dni').addEventListener('input', function() {
         return;
     }
 
-    timeoutDni = setTimeout(() => {
-        fetch('index.php?accion=buscar-cliente-ajax&dni=' + encodeURIComponent(dni))
-            .then(r => r.json())
-            .then(data => {
-                if (data.error || !data.id) {
-                    sugerencias.style.display = 'none';
-                    return;
-                }
-                // Mostrar sugerencia
-                sugerencias.innerHTML = `
-                    <div onclick="seleccionarCliente(${data.id}, '${data.dni}', '${data.nombres}', '${data.apellidos}', '${data.tipo_cliente}')"
-                         style="padding:10px 14px;cursor:pointer;font-size:14px;border-radius:8px;"
-                         onmouseover="this.style.background='#f0f9ff'"
-                         onmouseout="this.style.background='#fff'">
-                        <strong>${data.nombres} ${data.apellidos}</strong>
-                        <span style="color:#64748b;font-size:12px;margin-left:8px;">DNI: ${data.dni} — ${data.tipo_cliente}</span>
-                    </div>`;
-                sugerencias.style.display = 'block';
-            });
-    }, 300);
+timeoutDni = setTimeout(() => {
+    fetch('index.php?accion=buscar-cliente-ajax&dni=' + encodeURIComponent(dni))
+        .then(r => r.json())
+        .then(data => {
+            if (data.error || !data.id) {
+                sugerencias.style.display = 'none';
+                return;
+            }
+            // Mostrar sugerencia
+            sugerencias.innerHTML = `
+                <div onclick='seleccionarCliente(${JSON.stringify(data)})'
+                     style="padding:10px 14px;cursor:pointer;font-size:14px;border-radius:8px;"
+                     onmouseover="this.style.background='#f0f9ff'"
+                     onmouseout="this.style.background='#fff'">
+                    <strong>${data.nombres} ${data.apellidos}</strong>
+                    <span style="color:#64748b;font-size:12px;margin-left:8px;">DNI: ${data.dni} — ${data.tipo_cliente}</span>
+                </div>`;
+            sugerencias.style.display = 'block';
+        });
+}, 300);
 });
 
-function seleccionarCliente(id, dni, nombres, apellidos, tipo) {
-    document.getElementById('input-dni').value = dni;
-    document.getElementById('cliente-id').value = id;
+function seleccionarCliente(c) {
+    document.getElementById('input-dni').value = c.dni;
+    document.getElementById('cliente-id').value = c.id;
     document.getElementById('sugerencias-dni').style.display = 'none';
 
     const div = document.getElementById('info-cliente');
     div.style.display = 'block';
-    div.innerHTML = `✅ <strong>${nombres} ${apellidos}</strong> — DNI: ${dni} — Tipo: <em>${tipo}</em>`;
+    div.innerHTML = `✅ <strong>${c.nombres} ${c.apellidos}</strong> — DNI: ${c.dni} — Tipo: <em>${c.tipo_cliente}</em>`;
 }
 
 function limpiarCliente() {

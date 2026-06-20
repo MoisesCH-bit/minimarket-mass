@@ -6,6 +6,7 @@
   <style>
     /* ===== RESET BASE ===== */
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    html, body { height: 100%; overflow: hidden; }
     body { background: #f0f2f5; display: flex; flex-direction: column; min-height: 100vh; }
 
     /* ===== NAVBAR ===== */
@@ -28,36 +29,45 @@
     }
     .navbar a.salir:hover { background: #e8f0f9; }
 
-    /* ===== LAYOUT ===== */
-    .contenedor { display: flex; flex: 1; }
-    .contenido {
-    margin-left: 200px;
-}
-    
-/* ===== SIDEBAR ===== */
-.sidebar {
-  width: 200px; background: #004F8C; padding: 20px 0;
-  display: flex; flex-direction: column;
-  position: fixed;
-  top: 56px;
-  left: 0;
-  height: calc(100vh - 56px);
-  overflow-y: auto;
-  z-index: 100;
-}
-.sidebar a {
-  color: #cce0f5; text-decoration: none;
-  padding: 12px 20px; font-size: 14px; font-weight: 600;
-  display: block; border-left: 3px solid transparent;
-  transition: background .2s;
-}
-.sidebar a:hover { background: #003d70; color: #fff; }
-.sidebar a.activo { background: #003d70; color: #FFB81C; border-left: 3px solid #FFB81C; }
-.sidebar .separador { height: 1px; background: #003d70; margin: 8px 16px; }
-.sidebar a.disabled { color: #6a9bbf; cursor: not-allowed; pointer-events: none; }
+    /* ===== LAYOUT (fusionado: contenedor + sidebar fijo + main con scroll propio) ===== */
+    .contenedor {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 56px);
+      overflow: hidden;
+    }
 
-    /* ===== MAIN ===== */
-    main { flex: 1; padding: 28px 32px; }
+    .sidebar {
+      width: 200px; background: #004F8C; padding: 20px 0;
+      display: flex; flex-direction: column;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .sidebar a {
+      color: #cce0f5; text-decoration: none;
+      padding: 12px 20px; font-size: 14px; font-weight: 600;
+      display: block; border-left: 3px solid transparent;
+      transition: background .2s;
+    }
+    .sidebar a:hover { background: #003d70; color: #fff; }
+    .sidebar a.activo { background: #003d70; color: #FFB81C; border-left: 3px solid #FFB81C; }
+    .sidebar .separador { height: 1px; background: #003d70; margin: 8px 16px; }
+    .sidebar a.disabled { color: #6a9bbf; cursor: not-allowed; pointer-events: none; }
+
+    .contenido {
+      margin-left: 200px;
+    }
+
+    main {
+      flex: 1;
+      padding: 28px 32px;
+      overflow-y: auto;
+      height: calc(100vh - 56px);
+    }
     main h1 { color: #0066B3; border-bottom: 3px solid #FFB81C; padding-bottom: 3px; margin-bottom: 15px; }
 
     /* ===== TABLA ===== */
@@ -69,20 +79,28 @@
     .precio    { font-weight: bold; color: #0066B3; }
     .sin-stock { color: #c33; font-weight: 600; }
 
-    /* ===== PAGINACIÓN ===== */
-    .paginacion {
-      display: flex; gap: 8px; justify-content: center;
-      align-items: center; margin-top: 28px; margin-bottom: 8px; flex-wrap: wrap;
-    }
-    .pag-btn {
-      padding: 8px 16px; border-radius: 8px; border: 1px solid #d7dde6;
-      background: #fff; color: #0066B3; font-size: 13px; font-weight: 600;
-      text-decoration: none; display: inline-block; transition: all .2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-    .pag-btn:hover { background: #0066B3; color: #fff; border-color: #0066B3; }
-    .pag-activo { background: #0066B3; color: #fff; border-color: #0066B3; box-shadow: 0 2px 8px rgba(0,102,179,0.3); }
-    .pag-activo:hover { background: #004f8c; }
+/* ===== PAGINACIÓN ===== */
+.catalogo-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 56px - 240px);
+}
+.catalogo-wrapper .paginacion {
+    margin-top: auto;
+}
+.paginacion {
+    display: flex; gap: 8px; justify-content: center;
+    align-items: center; margin-top: 28px; margin-bottom: 8px; flex-wrap: wrap;
+}
+.pag-btn {
+    padding: 8px 16px; border-radius: 8px; border: 1px solid #d7dde6;
+    background: #fff; color: #0066B3; font-size: 13px; font-weight: 600;
+    text-decoration: none; display: inline-block; transition: all .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.pag-btn:hover { background: #0066B3; color: #fff; border-color: #0066B3; }
+.pag-activo { background: #0066B3; color: #fff; border-color: #0066B3; box-shadow: 0 2px 8px rgba(0,102,179,0.3); }
+.pag-activo:hover { background: #004f8c; }
 
     /* ===== BOTONES GENERALES ===== */
     .btn-primario {
@@ -172,26 +190,6 @@
       border-color: #0066B3;
       box-shadow: 0 0 0 3px rgba(0,102,179,0.1);
     }
-
-    /* ===== SIN SCROLL GLOBAL ===== */
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-
-.contenedor {
-    display: flex;
-    flex: 1;
-    height: calc(100vh - 56px);
-    overflow: hidden;
-}
-
-main {
-    flex: 1;
-    padding: 28px 32px;
-    overflow-y: auto;
-    height: calc(100vh - 56px);
-}
   </style>
 </head>
 <body>

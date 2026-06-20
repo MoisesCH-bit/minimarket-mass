@@ -6,7 +6,6 @@
 
   <main class="contenido">
     <h1>Nuevo Cliente</h1>
-    <div style="border-top: 3px solid #FFB81C; margin-bottom: 24px;"></div>
 
     <?php if (!empty($error)): ?>
       <p style="color:red"><?= htmlspecialchars($error) ?></p>

@@ -7,7 +7,7 @@
   <main class="contenido">
 
     <h1>Clientes del Minimarket Mass</h1>
-    <p style="margin-bottom:16px;">Total de clientes: <strong><?= count($clientes) ?></strong></p>
+    <p style="margin-bottom:16px;">Total de clientes: <strong><?= $total ?></strong></p>
 
     <a href="index.php?accion=nuevo-cliente"
        style="display:inline-block;margin-bottom:16px;background:#0066B3;color:#fff;
@@ -15,6 +15,7 @@
       + Nuevo cliente
     </a>
 
+    <div class="catalogo-wrapper">
     <table>
       <thead>
         <tr>
@@ -56,22 +57,19 @@
         <?php endforeach; ?>
       </tbody>
     </table>
+
+    <!-- PAGINACIÓN -->
     <?php if ($totalPaginas > 1): ?>
 <div class="paginacion">
-    <?php if ($paginaActual > 1): ?>
-        <a href="index.php?accion=clientes&pagina=<?= $paginaActual - 1 ?>" class="pag-btn">← Anterior</a>
-    <?php endif; ?>
     <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
         <a href="index.php?accion=clientes&pagina=<?= $i ?>"
            class="pag-btn <?= $i === $paginaActual ? 'pag-activo' : '' ?>">
             <?= $i ?>
         </a>
     <?php endfor; ?>
-    <?php if ($paginaActual < $totalPaginas): ?>
-        <a href="index.php?accion=clientes&pagina=<?= $paginaActual + 1 ?>" class="pag-btn">Siguiente →</a>
-    <?php endif; ?>
 </div>
 <?php endif; ?>
+    </div>
 
   </main>
 </div>

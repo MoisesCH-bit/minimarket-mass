@@ -13,7 +13,7 @@
 </div>
 <p style="margin-bottom:16px;">Total de productos: <strong><?= $total ?></strong></p>
 
-<div id="tabla-contenedor">
+<div id="tabla-contenedor" class="catalogo-wrapper">
   <table>
     <thead>
       <tr>
@@ -58,18 +58,12 @@
   <!-- PAGINACIÓN -->
   <?php if ($totalPaginas > 1): ?>
   <div class="paginacion">
-      <?php if ($paginaActual > 1): ?>
-          <a href="index.php?accion=catalogo&pagina=<?= $paginaActual - 1 ?>" class="pag-btn">← Anterior</a>
-      <?php endif; ?>
       <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
           <a href="index.php?accion=catalogo&pagina=<?= $i ?>"
              class="pag-btn <?= $i === $paginaActual ? 'pag-activo' : '' ?>">
               <?= $i ?>
           </a>
       <?php endfor; ?>
-      <?php if ($paginaActual < $totalPaginas): ?>
-          <a href="index.php?accion=catalogo&pagina=<?= $paginaActual + 1 ?>" class="pag-btn">Siguiente →</a>
-      <?php endif; ?>
   </div>
   <?php endif; ?>
   </main>
